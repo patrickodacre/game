@@ -3,14 +3,6 @@ use std::io::stdin;
 fn main()
 {
     do_get_name();
-
-    // let v = Visitor::new("Christian", "Hello, Jello!");
-
-    // println!("things {:?}", v);
-
-    // let v = Visitor::new("Christian", "What's up, Christian?");
-
-    // v.greet();
 }
 
 #[derive(Debug)]
@@ -30,16 +22,14 @@ impl Visitor
         }
     }
 
-    fn greet(self)
+    fn greet(&self) -> &String
     {
-        println!("{}", self.greeting);
+        &self.greeting
     }
 }
 
 fn do_get_name()
 {
-    let visitor_list = ["Evan", "Christian", "Daniel"];
-
     let visitor_list = [
         Visitor::new("Evan", "Hey, Evan!"),
         Visitor::new("Christian", "Hey, Christian!"),
@@ -48,17 +38,12 @@ fn do_get_name()
 
     let name = get_name();
 
-    // for visitor in &visitor_list {
-    // if visitor.name.to_lowercase() == name {
-    // println!("{}", visitor.greeting);
-    // return;
-    // }
-    // }
-
-    let known_visitor = visitor_list.iter().find(|visitor| visitor.name == name);
+    let known_visitor = visitor_list
+        .iter()
+        .find(|v| v.name.to_lowercase().contains(name.as_str()));
 
     match known_visitor {
-        Some(v) => println!("{}", v.greeting),
+        Some(v) => println!("{}", v.greet()),
         _ => println!("You're not on the list!"),
     }
 }
