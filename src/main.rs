@@ -2,16 +2,17 @@ use std::io::stdin;
 
 fn main()
 {
-    loop {
-        let visitor_list = [
-            Visitor::new("Evan", "Hey, Evan!"),
-            Visitor::new("Christian", "Hey, Christian!"),
-            Visitor::new("Daniel", "Hey, Daniel!"),
-        ];
+    let mut visitor_list = vec![
+        Visitor::new("Evan", "Hey, Evan!"),
+        Visitor::new("Christian", "Hey, Christian!"),
+        Visitor::new("Daniel", "Hey, Daniel!"),
+    ];
 
+    loop {
         let name = get_name().to_lowercase();
 
         if name.is_empty() {
+            println!("Updated list: {:?}\n", visitor_list);
             println!("Bye!");
             break;
         }
@@ -22,7 +23,13 @@ fn main()
 
         match known_visitor {
             Some(v) => println!("{}\n", v.greet()),
-            _ => println!("You're not on the list!"),
+            _ => {
+                println!("You're not on the list!\n");
+                visitor_list.push(Visitor::new(
+                    name.as_str(),
+                    format!("Hey {}!", name).as_str(),
+                ));
+            }
         }
     }
 }
