@@ -11,7 +11,7 @@ fn main()
 
         let name = get_name().to_lowercase();
 
-        if name == "" {
+        if name.is_empty() {
             println!("Bye!");
             break;
         }
