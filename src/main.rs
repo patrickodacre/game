@@ -35,6 +35,12 @@ impl Visitor
 
     fn greet(&self)
     {
+        if self.age < 21_u8 {
+            println!("Too young!");
+
+            return;
+        }
+
         match &self.action {
             VisitorAction::Accept => println!("C'mon in!"),
             VisitorAction::AcceptWithNote { note } => {
@@ -45,7 +51,6 @@ impl Visitor
                 println!("Watch yourself, {}, you're on probation.", &self.name);
             }
             VisitorAction::Refuse => println!("You're banned, {}. Get out of here.", &self.name),
-            _ => println!("no no"),
         }
     }
 }
