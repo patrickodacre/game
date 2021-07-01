@@ -2,7 +2,29 @@ use std::io::stdin;
 
 fn main()
 {
-    do_get_name();
+    loop {
+        let visitor_list = [
+            Visitor::new("Evan", "Hey, Evan!"),
+            Visitor::new("Christian", "Hey, Christian!"),
+            Visitor::new("Daniel", "Hey, Daniel!"),
+        ];
+
+        let name = get_name().to_lowercase();
+
+        if name == "" {
+            println!("Bye!");
+            break;
+        }
+
+        let known_visitor = visitor_list
+            .iter()
+            .find(|v| v.name.to_lowercase().contains(name.as_str()));
+
+        match known_visitor {
+            Some(v) => println!("{}\n", v.greet()),
+            _ => println!("You're not on the list!"),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -28,25 +50,6 @@ impl Visitor
     }
 }
 
-fn do_get_name()
-{
-    let visitor_list = [
-        Visitor::new("Evan", "Hey, Evan!"),
-        Visitor::new("Christian", "Hey, Christian!"),
-        Visitor::new("Daniel", "Hey, Daniel!"),
-    ];
-
-    let name = get_name();
-
-    let known_visitor = visitor_list
-        .iter()
-        .find(|v| v.name.to_lowercase().contains(name.as_str()));
-
-    match known_visitor {
-        Some(v) => println!("{}", v.greet()),
-        _ => println!("You're not on the list!"),
-    }
-}
 fn get_name() -> String
 {
     println!("What's your name?");
@@ -55,5 +58,5 @@ fn get_name() -> String
 
     stdin().read_line(&mut name).expect("bad input");
 
-    name.trim().to_lowercase()
+    name.trim().to_string()
 }
