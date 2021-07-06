@@ -63,8 +63,8 @@ fn main() -> Result<(), String>
     let mut players = Vec::<Point>::new();
     let mut sprites = Vec::<Rect>::new();
     let mut textures = Vec::<Texture>::new();
-    let mut player_1: usize = 0;
-    let mut player_2: usize = 1;
+    let player_1: usize = 0;
+    let player_2: usize = 1;
 
     // player 1
     let texture = texture_creator
@@ -103,34 +103,34 @@ fn main() -> Result<(), String>
                     keycode: Some(Keycode::A),
                     ..
                 } => {
-                    let current_position = players.get(0).unwrap();
+                    let current_position = players.get(player_1).unwrap();
                     let new_position = current_position.offset(-2, 0);
-                    std::mem::replace(&mut players[0], new_position);
+                    std::mem::replace(&mut players[player_1], new_position);
                 }
 
                 Event::KeyDown {
                     keycode: Some(Keycode::D),
                     ..
                 } => {
-                    let current_position = players.get(0).unwrap();
+                    let current_position = players.get(player_1).unwrap();
                     let new_position = current_position.offset(2, 0);
-                    std::mem::replace(&mut players[0], new_position);
+                    std::mem::replace(&mut players[player_1], new_position);
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::W),
                     ..
                 } => {
-                    let current_position = players.get(0).unwrap();
+                    let current_position = players.get(player_1).unwrap();
                     let new_position = current_position.offset(0, -2);
-                    std::mem::replace(&mut players[0], new_position);
+                    std::mem::replace(&mut players[player_1], new_position);
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::S),
                     ..
                 } => {
-                    let current_position = players.get(0).unwrap();
+                    let current_position = players.get(player_1).unwrap();
                     let new_position = current_position.offset(0, 2);
-                    std::mem::replace(&mut players[0], new_position);
+                    std::mem::replace(&mut players[player_1], new_position);
                 }
 
                 // player 2
@@ -138,34 +138,34 @@ fn main() -> Result<(), String>
                     keycode: Some(Keycode::Left),
                     ..
                 } => {
-                    let current_position = players.get(1).unwrap();
+                    let current_position = players.get(player_2).unwrap();
                     let new_position = current_position.offset(-2, 0);
-                    std::mem::replace(&mut players[1], new_position);
+                    std::mem::replace(&mut players[player_2], new_position);
                 }
 
                 Event::KeyDown {
                     keycode: Some(Keycode::Right),
                     ..
                 } => {
-                    let current_position = players.get(1).unwrap();
+                    let current_position = players.get(player_2).unwrap();
                     let new_position = current_position.offset(2, 0);
-                    std::mem::replace(&mut players[1], new_position);
+                    std::mem::replace(&mut players[player_2], new_position);
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::Up),
                     ..
                 } => {
-                    let current_position = players.get(1).unwrap();
+                    let current_position = players.get(player_2).unwrap();
                     let new_position = current_position.offset(0, -2);
-                    std::mem::replace(&mut players[1], new_position);
+                    std::mem::replace(&mut players[player_2], new_position);
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::Down),
                     ..
                 } => {
-                    let current_position = players.get(1).unwrap();
+                    let current_position = players.get(player_2).unwrap();
                     let new_position = current_position.offset(0, 2);
-                    std::mem::replace(&mut players[1], new_position);
+                    std::mem::replace(&mut players[player_2], new_position);
                 }
 
                 _ => {}
