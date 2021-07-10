@@ -10,12 +10,17 @@ use sdl2::render::{Texture, WindowCanvas};
 use std::path::Path;
 use std::time::Duration;
 
+// #[derive(Debug)]
+// struct MyTexture(Texture);
+
 fn render(
     canvas: &mut WindowCanvas,
     color: Color,
     players: &Vec<Point>,
-    textures: &Vec<Texture>,
+    player_textures: &Vec<Texture>,
     sprites: &Vec<Rect>,
+    rocks: &mut Vec<(Texture, Rect, Point, Point)>,
+    is_shooting: bool,
     // texture: &Texture,
     // position: Point,
     // sprite: Rect,
@@ -25,14 +30,35 @@ fn render(
     canvas.clear();
 
     let (width, height) = canvas.output_size()?;
+    let screen_position = Point::new(width as i32 / 2, height as i32 / 2);
     // canvas.copy(&texture, sprite, screen_rect)?;
+
+    if is_shooting {
+        for (i, r) in rocks.iter_mut().enumerate() {
+            let texture: &Texture = &r.0;
+            let sprite: Rect = r.1;
+            let start: Point = r.2;
+            let end: Point = r.3;
+
+            if start.x() == width as i32 {
+                println!("Done!");
+            }
+
+            let rock = Rect::new(start.x(), start.y(), sprite.width(), sprite.height());
+            canvas.copy(texture, sprite, rock)?;
+
+            r.2 = start.offset(5, 0);
+        }
+    }
+
+    // rocks = rocks.filter(|r| r.2 < r.3).collect();
 
     for (i, p) in players.iter().enumerate() {
         // println!("playres:: {:?}", p)
-        let screen_position = *p + Point::new(width as i32 / 2, height as i32 / 2);
+        let player_position = *p + screen_position;
         let screen_rect =
-            Rect::from_center(screen_position, sprites[i].width(), sprites[i].height());
-        canvas.copy(&textures[i], sprites[i], screen_rect)?;
+            Rect::from_center(player_position, sprites[i].width(), sprites[i].height());
+        canvas.copy(&player_textures[i], sprites[i], screen_rect)?;
     }
 
     canvas.present();
@@ -63,6 +89,8 @@ fn main() -> Result<(), String>
     let mut players = Vec::<Point>::new();
     let mut sprites = Vec::<Rect>::new();
     let mut textures = Vec::<Texture>::new();
+
+    let mut rocks = Vec::<(Texture, Rect, Point, Point)>::new();
     let player_1: usize = 0;
     let player_2: usize = 1;
 
@@ -84,8 +112,21 @@ fn main() -> Result<(), String>
     textures.push(texture);
     sprites.push(Rect::new(0, 108, 26, 36));
 
+    let rock = texture_creator
+        .load_texture(Path::new("assets/darkdimension.png"))
+        .unwrap();
+
+    // rocks.push((
+    // rock,
+    // Rect::new(106, 206, 8, 8),
+    // Point::new(10, 10),
+    // Point::new(10, 10),
+    // ));
+
     let mut event_pump = sdl_context.event_pump()?;
     let mut i = 0;
+    let mut shoot: bool = false;
+
     'mainloop: loop {
         // Handle events
         for event in event_pump.poll_iter() {
@@ -96,6 +137,33 @@ fn main() -> Result<(), String>
                     ..
                 } => {
                     break 'mainloop;
+                }
+
+                // inspect rocks
+                Event::KeyDown {
+                    keycode: Some(Keycode::I),
+                    ..
+                } => {
+                    // println!("rocks:: {:?}", rocks);
+                }
+                // shoot
+                Event::KeyDown {
+                    keycode: Some(Keycode::Space),
+                    ..
+                } => {
+                    println!("Fire!");
+                    shoot = true;
+
+                    println!("Fire!, {:?}", shoot);
+
+                    let rock = texture_creator
+                        .load_texture(Path::new("assets/darkdimension.png"))
+                        .unwrap();
+
+                    let start = players.get(player_1).unwrap();
+                    println!("Starting position: {:?}", start);
+                    let end = start.offset(20, 0);
+                    rocks.push((rock, Rect::new(106, 206, 8, 8), *start, end));
                 }
 
                 // player 1
@@ -182,6 +250,8 @@ fn main() -> Result<(), String>
             &players,
             &textures,
             &sprites,
+            &mut rocks,
+            shoot,
             // position,
             // sprite,
         )?;
